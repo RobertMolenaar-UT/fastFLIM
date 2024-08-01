@@ -63,7 +63,7 @@ Tau_max=4                       #end Lifetime Cmap at, above is clipped
 
 shorter_End_PIE_ns   =  0       #cut a piece from the initial x ns 
 shorter_Front_PIE_ns =  0       #cut a piece from the start TAC ns to surpess noise
-binning              =  2       #Pixel binning 1,2,3 = 1x1, 2x2 , 3x3 etc before fastFLIM conversion
+binning              =  1       #Pixel binning 1,2,3 = 1x1, 2x2 , 3x3 etc before fastFLIM conversion
 bi_shift             = -1       #bidirectional scanning mode, line mismatch correction
 
 scalebar            =True       #insert a scalebar in FLIM image instead of axis
