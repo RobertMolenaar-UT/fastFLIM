@@ -58,7 +58,7 @@ GUI_MultiPick=True    #Set TO Flase to proccess the full folder with the GUI
 Default_prompt=r'C:'
 
 
-Tau_min=2                       #start Lifetime Cmap from if set
+Tau_min=0                       #start Lifetime Cmap from if set
 Tau_max=4                       #end Lifetime Cmap at, above is clipped
 
 shorter_End_PIE_ns   =  0       #cut a piece from the initial x ns 
