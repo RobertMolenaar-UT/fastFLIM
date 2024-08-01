@@ -1,7 +1,7 @@
 # fastFLIM
 PicoQuant PTU file to fastFLIM images
 
-![Shep2_6__FLIM_Ch2](https://github.com/user-attachments/assets/4f1da1a4-1492-414a-8a13-f48ac49522c4)
+![Shep2_8__FLIM_Ch2](https://github.com/user-attachments/assets/af13818b-e88d-4016-9ef7-f5fd62ec7158)
 *Example: example 1 channel fastFLIM converted image, of cells labbelled with FluoVolt dye, that shows change in lifetime*
 
 The script is developed and tested on Python 3.11, Install:
@@ -39,7 +39,7 @@ Config1 = Set_Channel_Info(1,
 5. readPTU_FLIM_bidirect is modified from https://github.com/RobertMolenaar-UT/readPTU_FLIM and expanded with bidirection lineoffset correction. bi-direct variable set pixles shift correction.
 
 ![Screenshot 2024-08-01 115904](https://github.com/user-attachments/assets/d5c1737b-26cc-4bff-8c75-d49b447a3d44)
-*Example:Command line summary*
+*Example: command line summary*
 
 # Modification to your your MT200:
 
