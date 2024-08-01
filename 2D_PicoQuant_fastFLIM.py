@@ -464,22 +464,17 @@ for path in path_select:
         plt.figtext(0.127,0.875  ,f'{DwellTime} {image_pixels}')
         im1 = axs[0].imshow( FFI, cmap='gray', extent=extent)         
         
-        cbar=fig2.colorbar(im1, ax=axs[0], fraction=0.047, pad=0.02, shrink=0.8)
+        cbar=fig3.colorbar(im1, ax=axs[0], fraction=0.047, pad=0.02, shrink=0.8)
         cbar.ax.tick_params(labelsize=12)
         cbar.set_label('Intensity [counts]', labelpad=8, rotation=90, size=13)
         axs[0].set_xlabel('X $\mu$m')
         axs[0].set_ylabel('Y $\mu$m')
         axs[0].grid(False)
         
-        
-        #im2 = axs[1].imshow(FFS[:,:,:,i], extent=extent)
-        
-        #im2 = axs[1].imshow(np.sum(FFS/len(ch_list), axis=3), extent=extent)
         im2 = axs[1].imshow(FFcmap, extent=extent)
-        
         im2.set_cmap(cm.jet) #manual set of colorbar cmap 
         im2.set_clim([chan.Tau_min,chan.Tau_max]) #manaual set range of the colorbar cm
-        cbar=fig2.colorbar(im2, ax=axs[1], fraction=0.047, pad=0.02, shrink=0.8, ticks=np.linspace(chan.Tau_min,chan.Tau_max,scalebar_ticks))
+        cbar=fig3.colorbar(im2, ax=axs[1], fraction=0.047, pad=0.02, shrink=0.8, ticks=np.linspace(chan.Tau_min,chan.Tau_max,scalebar_ticks))
         cbar.ax.tick_params(labelsize=12)
         cbar.set_label('Average lifetime [ns]', labelpad=8, rotation=90, size=13)
         
