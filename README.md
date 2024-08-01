@@ -8,8 +8,8 @@ The script is developed and tested on Python 3.11, Install:
 
 - wx python 4.2.1 for the file selector app.
 - imageIO
-- scalebar 
-- PicoQuant PTU file reader: https://github.com/RobertMolenaar-UT/readPTU_FLIM
+- matplotlib-scalebar 
+- PTU file reader: https://github.com/RobertMolenaar-UT/readPTU_FLIM (updated version inlcuded)
 
 Script is used on a Picoquant MT200 with FLIMBEE laserscanner with 4x SPAD detectors and a multiharp 150.
 
