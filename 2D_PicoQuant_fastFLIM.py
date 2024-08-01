@@ -493,6 +493,11 @@ for path in path_select:
            
         plt.savefig(f'{d_name}{f_name}__FLIM_overlap_{chan.ChannelName}.png',dpi=fig_dpi)
         
+        if clean_imsave:
+            imageio.imwrite(f'{d_name_tif}FLIM_combi_im_{f_name}_{chan.ChannelName}.tif', (255*FFcmap).astype(np.uint8))
+            imageio.imwrite(f'{d_name_tif}INT_combi_im_{f_name}_{chan.ChannelName}.tif', FFI.astype(np.uint16))
+
+            
         plt.show()
 
    
