@@ -438,21 +438,23 @@ for path in path_select:
                  
     if len(ch_list)>1 and overlap_FLIMchannels:
         
-        FFI=0
-        FFcmap=0
-        for chan in ch_list:
-            FFI=FFI+chan.FFint
-            if projection=='sum':
-                FFcmap=FFcmap+chan.FFcmap/2
+        if projection=='sum':
+        
+            for chan in ch_list:
+                FFI=FFI+chan.FFint
+                FFcmap=FFcmap+chan.FFcmap
             
         if projection== 'maximum':
             if len(ch_list)==2:
-                FFcmap=np.maximum(ch_list[0].FFcmap, ch_list[1].FFcmap)
+                FFcmap=np.max(np.stack((ch_list[0].FFcmap, ch_list[1].FFcmap), axis = -1), axis=3)
+                FFI   =np.maximum(ch_list[0].FFint, ch_list[1].FFint)
             if len(ch_list)==3:
-                FFcmap=np.maximum(ch_list[0].FFcmap, ch_list[1].FFcmap, ch_list[2].FFcmap)
+                FFcmap=np.max(np.stack((ch_list[0].FFcmap, ch_list[1].FFcmap, ch_list[2].FFcmap), axis = -1), axis=3)
+                FFI=np.maximum(np.maximum(ch_list[0].FFint, ch_list[1].FFint), ch_list[2].FFint)
             if len(ch_list)==4:
-                FFcmap=np.maximum(ch_list[0].FFcmap, ch_list[1].FFcmap, ch_list[2].FFcmap, ch_list[3].FFcmap)
-           
+                FFcmap=np.max(np.stack((ch_list[0].FFcmap, ch_list[1].FFcmap, ch_list[2].FFcmap, ch_list[3].FFcmap), axis = -1), axis=3)
+                FFI=np.maximum(np.maximum(np.maximum(ch_list[0].FFint, ch_list[1].FFint), ch_list[2].FFint), ch_list[3])
+        
             
         
         fig3, axs = plt.subplots(1, 2, figsize=(15.9, 7.5))
