@@ -339,7 +339,7 @@ for path in path_select:
     print(f'FLIM conversion  20pct Photon rate = {FLIM_sync_limit:.0f}cnts')
 #%% Data FLIM converation and Colourmap generation
 
-    for fi, chan in enumerate(ch_list):
+    for chan in ch_list:
                
         #import average lifetime over the configuration/channel files
         try:
@@ -388,7 +388,7 @@ for path in path_select:
     image_pixels=f' | size {ptu_file.head["ImgHdr_PixX"]}x{ptu_file.head["ImgHdr_PixY"]} {ptu_file.head["ImgHdr_PixResol"]:.3f}µm/p | 20% sync lim {FLIM_sync_limit:.0f}cnt | Rate {ptu_file.head["TTResult_SyncRate"]/1E6:.1f}MHz '
  
         
-    for i, chan in enumerate(ch_list):
+    for  chan in ch_list:
         
          fig2, axs = plt.subplots(1, 2, figsize=(15.9, 7.5))
          rect = fig2.patch  #modify background color
