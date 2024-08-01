@@ -87,9 +87,9 @@ The main For-loop proccesses all files sequentially.
 11. Option  FLIM image and Intensity tif image is saved.
 12. Option, FLIM images from multiple channels can be overlapped by overlap_FLIMchannels.
 
-
-
-![BPAE_FluoCells_15_Intensity-ColorsFlim](https://github.com/user-attachments/assets/29c58286-3122-4350-bd14-29ffc5203c6f)
 Example of 3 colors BPAE, on fluorescent colors (made with PicoQuant-multi channel screen), and fastFLIM.
+![BPAE_FluoCells_2_Intensity-combi](https://github.com/user-attachments/assets/3bc7ef2d-39e6-474c-a55f-072f75c9a33d)
+
+
 
 
