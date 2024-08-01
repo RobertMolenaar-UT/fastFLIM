@@ -52,15 +52,15 @@ Put the 2D_PicoQuant_fastFLIM.py and readPU_FLUM_bidirect.py files in the sample
 
 1. Set the Channel configuration according optical setup.
 2. Read and set all options in the section --- USER input---  upon description.
-3. Run the PiqoQuant-multi_channel_screen.py.
+3. Run 2D_PicoQuant_fastFLIM.py.
 4. Note the pop-up window in the taskbar and browse and select the PTU files.
-5. PTU files are proccessed, and images are shown in the command line. (large PTU files can take some time to proccess)
+5. next the *.PTU files are proccessed, and images are shown in the command line. (large PTU files can take some time to proccess)
 6. Images and data files are saved in folder /Python_converted_* Username* /
-7. Errors on files are listed in the end, in many cases these are Single Point or cancelled 2D measurements.
+7. Errors on files are listed in the end.
 
 Known limitations: 
 
-1. Files sizes > 1GB use a lot of Memory. 64GB or higher is recommended for 1GB ptu files. 
+1. Files sizes > 1GB use a lot of Memory. 64GB or higher is recommended for 1GB PTU files. 
 2. Multiframe PTU conversion appears to skip a Frame, modification needed in the readPTU_FLIM code. aug '24
 
 
@@ -70,7 +70,7 @@ v1.0 - 1 August 2024 Robert Molenaar
 
 # Workflow summary
  
-wx 'GUI_select_Multi_file' app prompts to select (multiple) data files. 
+wx 'GUI_select_Multi_file' app prompts to select (multiple) *.PTU files. 
 
 The main For-loop proccesses all files sequentially.
 
