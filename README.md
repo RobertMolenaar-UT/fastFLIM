@@ -1,7 +1,7 @@
 # fastFLIM
 PicoQuant PTU file to fastFLIM images
 
-![Shep2_8__FLIM_Ch2](https://github.com/user-attachments/assets/af13818b-e88d-4016-9ef7-f5fd62ec7158)
+![Shep2_8__FLIM_Ch2](https://github.com/user-attachments/assets/e0e79cfb-ae82-4749-bbf3-0a56ec9524e6)
 *Example: example 1 channel fastFLIM converted image, of cells labbelled with FluoVolt dye, that shows change in lifetime*
 
 The script is developed and tested on Python 3.11, Install:
