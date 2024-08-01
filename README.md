@@ -90,6 +90,6 @@ The main For-loop proccesses all files sequentially.
 
 
 ![BPAE_FluoCells_15_Intensity-ColorsFlim](https://github.com/user-attachments/assets/29c58286-3122-4350-bd14-29ffc5203c6f)
-Example of 3 colors BPAE, on fluorescent colors, and FLIM lifetime
+Example of 3 colors BPAE, on fluorescent colors (made with PicoQuant-multi channel screen), and fastFLIM.
 
 
