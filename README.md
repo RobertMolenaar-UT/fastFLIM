@@ -9,19 +9,19 @@ The main purpose of the fastFLIM script is one can convert by batch multiple PTU
 
 ### Dependencies
 The script is developed and tested on Python 3.11, Install:
-	- wx python 4.2.1 for the file selector app.
-	- imageIO
-	- matplotlib-scalebar 
-	- PTU file reader: https://github.com/RobertMolenaar-UT/readPTU_FLIM (updated version inlcuded)
+1. wx python 4.2.1 for the file selector app.
+2. imageIO
+3. matplotlib-scalebar 
+4. updated readPTU_FLIM-bidirect version is inlcuded, source [PTU file reader](https://github.com/RobertMolenaar-UT/readPTU_FLIM) 
 
-### Scripts features:  
-- File Check, if it is a 2D  image.
-- Autodetects the number of APD channels. 
-- Supports 'normal' and 'PIE' excitation, one can set channel Timegate.
-- fastFLIM/rapidFLIM Conversion.
-- Optional: Image pixel binning.
-- Optional: Clean TIF images and datafiles are stored.
-- File-errors are catched and reported in the end.
+### Script features:  
+1. File Check, if it is a 2D  image.
+2. Autodetects the number of APD channels. 
+3. Supports 'normal' and 'PIE' excitation, one can set channel Timegate.
+4. fastFLIM/rapidFLIM Conversion.
+5. Optional: Image pixel binning.
+6. Optional: Clean TIF images and datafiles are stored.
+7. File-errors are catched and reported in the end.
 
 ![Screenshot 2024-08-01 115904](https://github.com/user-attachments/assets/d5c1737b-26cc-4bff-8c75-d49b447a3d44)
 *Figure 2: command line PTU file experiment setitings summary*
@@ -37,16 +37,16 @@ Put the 2D_PicoQuant_fastFLIM.py and readPU_FLUM_bidirect.py files in the sample
 
 1. Set the Channel configuration according optical setup.
 
-	>Detector Channels need to be configured:
-	Config1 = Set_Channel_Info(1,
-	                           'Namelabel',
-	                           Brighter=1.2,
-	                           PIE_TimeGate=1,
-	                           ch_irf=2.55)
-	>1. *Namelabel*: name of the used dye or sample.
-	>2. *Brigther*: 	intensity is maximum scaled, increasing brightness helps visibility.
-	>3. *PIE TimeGate*: Contrast can be enhanced by using Pulsed Interlieved Excitation in the measurment to supress any cross-excitation. 
-	>4. *ch_irf*: instrument response, channel specific time offset.
+>Detector Channels need to be configured:
+Config1 = Set_Channel_Info(1,
+			   'Namelabel',
+			   Brighter=1.2,
+			   PIE_TimeGate=1,
+			   ch_irf=2.55)
+>1. *Namelabel*: name of the used dye or sample.
+>2. *Brigther*: 	intensity is maximum scaled, increasing brightness helps visibility.
+>3. *PIE TimeGate*: Contrast can be enhanced by using Pulsed Interlieved Excitation in the measurment to supress any cross-excitation. 
+>4. *ch_irf*: instrument response, channel specific time offset.
 	
 2. Read and set all options in the section -- USER input --  upon description.
 3. Run 2D_PicoQuant_fastFLIM.py.
@@ -55,7 +55,7 @@ Put the 2D_PicoQuant_fastFLIM.py and readPU_FLUM_bidirect.py files in the sample
 6. Images and data files are saved in folder /Python_converted_* Username* /
 7. Errors on files are listed in the end.
 
->The countrate in FLIM should not exceed 10-20%, *FLIM_sync_limit* shows the 20% count limit value per pixel.
+>The countrate in FLIM should not exceed 10-20%, *FLIM_sync_limit* shows the 20% count limit value.
 
 ### OUTPUT
 
