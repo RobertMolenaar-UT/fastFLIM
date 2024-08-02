@@ -1,5 +1,5 @@
 # fastFLIM
-PicoQuant PTU file to fastFLIM images
+Create fastFLIM images from PicoQuant PTU files.
 
 ![Shep2_8__FLIM_Ch2](https://github.com/user-attachments/assets/e0e79cfb-ae82-4749-bbf3-0a56ec9524e6)
 *Figure 1, Example of a 1 channel fastFLIM converted image, of cells labelled with FluoVolt dye, that shows change in lifetime*
@@ -24,6 +24,7 @@ The script is developed and tested on Python 3.11, Install:
 7. File-errors are catched and reported in the end.
 
 ![Screenshot 2024-08-01 115904](https://github.com/user-attachments/assets/d5c1737b-26cc-4bff-8c75-d49b447a3d44)
+
 *Figure 2: command line PTU file experiment setitings summary*
 
 ### Modification to your your MT200:
@@ -93,9 +94,10 @@ v1.0 - 1 August 2024 Robert Molenaar ©.
 14. Option, FLIM images from multiple channels can be overlapped by overlap_FLIMchannels.
 ---
 ### Multicolour fastFLIM
-Figure 3: Example of 3 colors BPAE, Fluorescent colors overlay made with [PicoQuant-multi channel screen](https://github.com/RobertMolenaar-UT/PicoQuant-multi_channel_screen), and FLIM with this fastFLIM script.
+
 ![BPAE_FluoCells_2_Intensity-combi](https://github.com/user-attachments/assets/3bc7ef2d-39e6-474c-a55f-072f75c9a33d)
 
+*Figure 3: Example of 3 colours BPAE, Fluorescent colors overlay made with [PicoQuant-multi channel screen](https://github.com/RobertMolenaar-UT/PicoQuant-multi_channel_screen), and FLIM with this fastFLIM script.*
 
 
 
