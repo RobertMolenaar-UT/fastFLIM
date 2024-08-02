@@ -2,19 +2,19 @@
 PicoQuant PTU file to fastFLIM images
 
 ![Shep2_8__FLIM_Ch2](https://github.com/user-attachments/assets/e0e79cfb-ae82-4749-bbf3-0a56ec9524e6)
-*Figure 1, Example of a 1 channel fastFLIM converted image, of cells labbelled with FluoVolt dye, that shows change in lifetime*
+*Figure 1, Example of a 1 channel fastFLIM converted image, of cells labelled with FluoVolt dye, that shows change in lifetime*
 
 ## Discription
-The main purpose of the fastFLIM script is one can convert batchwise multiple PTU files or a folder with PTU files and get a series Fluorescent fastFLIM images with minimal user input. This is usefull for screening results during imaging and to be used in presentations. FastFLIM calculates the average arrival time, which is a fast method to get a fluorescent lifetime information for image with low photon counts per pixel, which is typical for TCSPC methods. 
+The main purpose of the fastFLIM script is one can convert by batch multiple PTU files, or a folder with PTU files, and get a series Fluorescent fastFLIM images with minimal user input. This is usefull for screening results during imaging and to be used in presentations. FastFLIM calculates the average arrival time, which is a fast method to get a fluorescent lifetime information for image with low photon counts per pixel, which is typical for TCSPC methods. 
 
-## Dependencies
+### Dependencies
 The script is developed and tested on Python 3.11, Install:
 	- wx python 4.2.1 for the file selector app.
 	- imageIO
 	- matplotlib-scalebar 
 	- PTU file reader: https://github.com/RobertMolenaar-UT/readPTU_FLIM (updated version inlcuded)
 
-## Scripts features:  
+### Scripts features:  
 - File Check, if it is a 2D  image.
 - Autodetects the number of APD channels. 
 - Supports 'normal' and 'PIE' excitation, one can set channel Timegate.
@@ -26,9 +26,9 @@ The script is developed and tested on Python 3.11, Install:
 ![Screenshot 2024-08-01 115904](https://github.com/user-attachments/assets/d5c1737b-26cc-4bff-8c75-d49b447a3d44)
 *Figure 2: command line PTU file experiment setitings summary*
 
-## Modification to your your MT200:
+### Modification to your your MT200:
 
-1.  Change the laser lines in order of the SEPIAII rackposition *PDL828_laser_line=[638,560,488,405]*. If lasers are in installed in different SEPIAII rack positions assign these in *def Read_laserLines()*  PDL828_module=[200,300,400,500]  #names of the lasers modules in ptu headerfile of rack position [2,3,4,5] 	
+1.  Set the laser lines in order of the SEPIAII rackposition *PDL828_laser_line=[638,560,488,405]*. If lasers are in installed in different SEPIAII rack positions assign these in *def Read_laserLines()*  PDL828_module=[200,300,400,500]  #names of the lasers modules in ptu headerfile of rack position [2,3,4,5] 	
 2.  Set the objective full name in Symphotime64 application or in the function *Read_objective()*
 
 ## Usage: 
@@ -48,16 +48,16 @@ Put the 2D_PicoQuant_fastFLIM.py and readPU_FLUM_bidirect.py files in the sample
 	>3. *PIE TimeGate*: Contrast can be enhanced by using Pulsed Interlieved Excitation in the measurment to supress any cross-excitation. 
 	>4. *ch_irf*: instrument response, channel specific time offset.
 	
-2. Read and set all options in the section --- USER input---  upon description.
+2. Read and set all options in the section -- USER input --  upon description.
 3. Run 2D_PicoQuant_fastFLIM.py.
 4. Note the pop-up window in the taskbar and browse and select the PTU files.
 5. Next the *.PTU files are proccessed, and images are shown in the command line. (for large PTU file size it can take time to proccess)
 6. Images and data files are saved in folder /Python_converted_* Username* /
 7. Errors on files are listed in the end.
 
->The countrate in FLIM should not exceed 20%, *FLIM_sync_limit* shows the 20% count value per pixel.
+>The countrate in FLIM should not exceed 10-20%, *FLIM_sync_limit* shows the 20% count limit value per pixel.
 
-## OUTPUT
+### OUTPUT
 
 1. Summary Intensity plus FLIM image. *Figure1*
 2. optional *clean_imsave*, saves a clean, FLIM and Intensity TIF file for each channel.
@@ -65,7 +65,7 @@ Put the 2D_PicoQuant_fastFLIM.py and readPU_FLUM_bidirect.py files in the sample
 
 
 
-## Known limitations: 
+### Known limitations: 
 
 1. Files sizes > 1GB use a lot of Memory. 64GB or higher is recommended for 1GB PTU files. 
 2. Multiframe PTU conversion appears to skip a Frame, modification needed in the readPTU_FLIM code. aug '24
@@ -75,7 +75,7 @@ v1.0 - 1 August 2024 Robert Molenaar ©.
 
 
 
-## Workflow summary
+### Workflow summary
  
 1.  wx 'GUI_select_Multi_file' app prompts to select (multiple) *.PTU files. 
 2.  The main For-loop proccesses all files sequentially.
