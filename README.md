@@ -52,10 +52,10 @@ Config1 = Set_Channel_Info(1,
 3. Run 2D_PicoQuant_fastFLIM.py.
 4. Note the pop-up window in the taskbar and browse and select the PTU files.
 5. Next the *.PTU files are proccessed, and images are shown in the command line. (for large PTU file size it can take time to proccess)
-6. Images and data files are saved in folder /Python_converted_* Username* /
-7. Errors on files are listed in the end.
+6. Images and data files are saved in folder /Python_converted_TAC-range_* Username* /
+7. Errors on files are listed at the end.
 
->The countrate in FLIM should not exceed 10-20%, *FLIM_sync_limit* shows the 20% count limit value.
+>**The countrate in FLIM should not exceed 10-20%, *FLIM_sync_limit* shows the 20% count limit value.**
 
 ### OUTPUT
 
