@@ -92,7 +92,8 @@ v1.0 - 1 August 2024 Robert Molenaar ©.
 13. Option  FLIM image and Intensity tif image is saved.
 14. Option, FLIM images from multiple channels can be overlapped by overlap_FLIMchannels.
 ---
-Figure 3: Example of 3 colors BPAE, on fluorescent colors (made with PicoQuant-multi channel screen), and fastFLIM.
+### Multicolour fastFLIM
+Figure 3: Example of 3 colors BPAE, Fluorescent colors overlay made with [PicoQuant-multi channel screen](https://github.com/RobertMolenaar-UT/PicoQuant-multi_channel_screen), and FLIM with this fastFLIM script.
 ![BPAE_FluoCells_2_Intensity-combi](https://github.com/user-attachments/assets/3bc7ef2d-39e6-474c-a55f-072f75c9a33d)
 
 
