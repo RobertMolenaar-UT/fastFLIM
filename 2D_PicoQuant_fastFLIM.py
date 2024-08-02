@@ -439,7 +439,8 @@ for path in path_select:
     if len(ch_list)>1 and overlap_FLIMchannels:
         
         if projection=='sum':
-        
+            FFI=0
+            FFcmap=0    
             for chan in ch_list:
                 FFI=FFI+chan.FFint
                 FFcmap=FFcmap+chan.FFcmap
