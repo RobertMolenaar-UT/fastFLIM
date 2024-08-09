@@ -8,7 +8,7 @@ Create fastFLIM images from PicoQuant PTU files.
 The main purpose of the fastFLIM script is one can convert by batch multiple PTU files, or a folder with PTU files, and get a series Fluorescent fastFLIM images with minimal user input. This is usefull for screening results during imaging and to be used in presentations. FastFLIM calculates the average arrival time, which is a fast method to get a fluorescent lifetime information for image with low photon counts per pixel, which is typical for TCSPC methods. 
 
 ### Dependencies
-A PicoQuant microscope MT200 with FLIMbee scanner.
+A PicoQuant microscope MT200 with FLIMbee scanner. 
 
 The script is developed and tested on Python 3.11, Install:
 1. wx python 4.2.1 for the file selector app.
