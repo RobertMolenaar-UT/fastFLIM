@@ -21,10 +21,11 @@ The script is developed and tested on Python 3.11, Install:
 2. Autodetects the number of APD channels, and laser lines used. 
 3. Supports 'normal' and 'PIE' excitation, one can set channel Timegate.
 4. fastFLIM/rapidFLIM Conversion.
-5. Optional: Image pixel binning.
-6. Optional: Combine TCSPC of multiple SPAD's into channel 1
-7. Optional: Clean TIF images and datafiles are stored.
-8. Any File-errors are catched and reported in the end.
+5. Optional: **binning** Image pixels .
+6. Optional: **channel_binning** Combine TCSPC of multiple SPAD's into channel 1.
+7. Optional: **shorter_End_PIE_ns** Crop TCSPC TimeGate. 
+8. Optional: **clean_imsave** saves clean TIF images and datafiles.
+9. Any File-errors are catched and reported in the end.
 
 ![Screenshot 2024-08-01 115904](https://github.com/user-attachments/assets/d5c1737b-26cc-4bff-8c75-d49b447a3d44)
 
