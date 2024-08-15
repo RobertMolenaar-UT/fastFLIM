@@ -161,7 +161,7 @@ def Channels_list(data_stack):
     """Function screens all 4 data channels if intensity >0 channel is probably used and pit into the outlist 
     Practical sometime there a countable counts in an image, so intensity need to be larger than the number of lines pixY
     """
-    ch=[0,1,2,3]
+    ch=np.linspace(0,np.shape(flim_data_stack)[2]-1, np.shape(flim_data_stack)[2]).astype(int)
     CLSch=[Config1,Config2,Config3,Config4]
     out=np.empty(0)
     out2=np.empty(0)
