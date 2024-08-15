@@ -261,8 +261,7 @@ for path in path_select:
     #Main loop that procceses all *.PTU files (path_select) from Multiple file pick or folder
     
     #read ptu file
-    head, tail = os.path.split(path)
-    print(f'\nConverting TCSPC-data from | {tail} | to a fastFLIM image.')    
+    print(f'\nConverting TCSPC-data from | {os.path.split(path)[1]} | to a fastFLIM image.')    
     ptu_file  = PTUreader((path), print_header_data = False, bi_shift=bi_shift)
     
     #File checking if its 1D or 2d: skip to next file if 1D
