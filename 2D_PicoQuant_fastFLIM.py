@@ -63,6 +63,7 @@ Tau_max=4                       #end Lifetime Cmap at, above is clipped
 
 shorter_End_PIE_ns   =  0       #cut a piece from the initial x ns 
 shorter_Front_PIE_ns =  0       #cut a piece from the start TAC ns to surpess noise
+channel_binning      = False    #Merges all channels into channel 1, multiple detectors combined to one (please match IRF onset in symphotine64)
 binning              =  1       #Pixel binning 1,2,3 = 1x1, 2x2 , 3x3 etc before fastFLIM conversion
 bi_shift             = -1       #bidirectional scanning mode, line mismatch correction
 
@@ -312,6 +313,20 @@ for path in path_select:
         ptu_file.head["ImgHdr_PixX"]=int(ptu_file.head["ImgHdr_PixX"]/binning)
         ptu_file.head["ImgHdr_PixY"]=int(ptu_file.head["ImgHdr_PixY"]/binning)
         ptu_file.head["ImgHdr_PixResol"] = ptu_file.head["ImgHdr_PixResol"]*binning
+
+    if channel_binning:
+        # channel binning
+        if 'Combined SPADs' not in ch_list[0].Name:
+            ch_list[0].Name = f'{ch_list[0].Name} Combined SPADs'  
+            ch_list[0].ChannelName = f'{ch_list[0].ChannelName}→{ch_list[len(ch_list)-1].Channel+1}'  
+            folder_com=f'ChBin_{folder_com}'
+        
+        flim_data_stack=np.expand_dims(np.sum(flim_data_stack, axis=2), axis=2)
+        #Since channels are gone, configuration are copied from the first channel in the list
+        ch_list=ch_list[:1]
+        print("NOTE: channel_binning on 'ON' all channels are merged.")
+        
+        
     #extra info
     
     LaserLines, LaserInfo, _ =Read_SEPIA_used_laser_lines()    
