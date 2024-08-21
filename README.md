@@ -31,11 +31,6 @@ The script is developed and tested on Python 3.11, Install:
 
 *Figure 2: command line PTU file experiment setitings summary*
 
-### Modification to your your MT200:
-
-1.  Set the laser lines in order of the SEPIAII rackposition *PDL828_laser_line=[638,560,488,405]*. If lasers are in installed in different SEPIAII rack positions assign these in *def Read_laserLines()*  PDL828_module=[200,300,400,500]  #names of the lasers modules in ptu headerfile of rack position [2,3,4,5] 	
-2.  Set the objective full name in Symphotime64 application or in the function *Read_objective()*
-
 ## Usage: 
 
 Put the 2D_PicoQuant_fastFLIM.py and readPU_FLUM_bidirect.py files in the sample folder, preferable with you data. The File readPTU_FLIM_bidirect is modified from https://github.com/RobertMolenaar-UT/readPTU_FLIM and expanded with bidirection line-offset correction. pixles shift correction is set by *bi-direct* variable.
