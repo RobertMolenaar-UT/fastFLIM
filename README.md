@@ -25,7 +25,8 @@ The script is developed and tested on Python 3.11, Install:
 6. Optional: **channel_binning** Combine TCSPC of multiple SPAD's into channel 1.
 7. Optional: **shorter_End_PIE_ns** Crop TCSPC TimeGate. 
 8. Optional: **clean_imsave** saves clean TIF images and datafiles.
-9. Any File-errors are catched and reported in the end.
+9. optional: **Save_tiff_stack** saves a tiff stack for the selected channel(s) and TimeGates. 2D Int(timebins)
+10. Any File-errors are catched and reported in the end.
 
 ![Screenshot 2024-08-01 115904](https://github.com/user-attachments/assets/d5c1737b-26cc-4bff-8c75-d49b447a3d44)
 
