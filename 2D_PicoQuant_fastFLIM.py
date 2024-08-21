@@ -185,24 +185,22 @@ def Read_SEPIA_used_laser_lines():
     info: string text of laser summary
     Colour_out: an array with sugested color used in AutoColour option    
     """
-    PDL828_laser_line=[638,560,488,405,0]    # Set avaialble lasers lines at the SEPIA slot 0,1,2,3
-    PDL828_module=[200,300,400,500,600]   #names of lasers moduls in ptu headerfile
     recommend_colour=['Red','Yellow','Green','Blue']
-    out=np.empty(0,dtype=int)
+    line=np.empty(0,dtype=int)
+    str_info=''
     Colour_out=[]
-    info=''
-
-    for i, a in enumerate(PDL828_module):
+    
+    for i, a in enumerate([200,300,400,500,600]):
         try:
-            #try when a module is not installed and skips insteasd of error
+            #exception when a PDL 828module is not installed or removed.
             if ptu_file.head[f"Sep2_SLM_{a}_FineIntensity"] !=0:
-                out=np.append(out,PDL828_laser_line[i])
+                line=np.append(line, int(ptu_file.head[f'UsrHeadName({i})'][:3]))
                 Colour_out=np.append(Colour_out,recommend_colour[i])
-                info=f'{info} {PDL828_laser_line[i]}nm {ptu_file.head[f"Sep2_SLM_{a}_FineIntensity"]}% '  
+                str_info=f'{str_info} '+str(int(ptu_file.head[f'UsrHeadName({i})'][:3]))+f'nm {ptu_file.head[f"Sep2_SLM_{a}_FineIntensity"]}% '  
         except:
             continue
-                
-    return out,info,Colour_out
+
+    return line,str_info,Colour_out
 
 def print_header_info(): 
     """ This function prints a short summary of exeperimental settings of the ptu file
