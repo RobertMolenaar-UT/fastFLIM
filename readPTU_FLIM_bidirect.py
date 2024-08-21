@@ -300,7 +300,8 @@ class PTUreader():
 
         # Get the tag name (first element of the tag_struct)
         tagName = tag_struct[0].rstrip(b'\0').decode()
-        # tagNames has multliple of same name add (n)
+        
+      # tagNames has multliple tagNames of same name add (n) to expand.
         if tag_struct[1] !=-1:
             tagName=f'{tagName}({tag_struct[1]})'
       
@@ -340,25 +341,19 @@ class PTUreader():
             offset += tag['value']
 
         tagValue  = tag['value']
-
         return tagName, tagValue, offset, tagStringR
     
-    
-    def _ptu_read_head(self, ptu_data_string):
-    
+  def _ptu_read_head(self, ptu_data_string):
         offset         = 16
         FileTagEnd     = 'Header_End' 
-        tag_end_offset = ptu_data_string.find(FileTagEnd.encode())
 
         tagName, tagValue, offset, tagString  = self._ptu_read_tags(ptu_data_string, offset)
         self.head[tagName] = tagValue
 
-        #while offset < tag_end_offset:
         while tagName != FileTagEnd:
                 tagName, tagValue, offset, tagString = self._ptu_read_tags(ptu_data_string, offset)
                 if tagString=='NA': self.head[tagName] = tagValue
                 else: self.head[tagName] = tagString
-#                 print(tagName, tagValue)
 
         # End of Header file and beginning of TTTR data
         self.head[FileTagEnd] = offset
