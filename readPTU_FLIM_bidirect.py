@@ -300,7 +300,10 @@ class PTUreader():
 
         # Get the tag name (first element of the tag_struct)
         tagName = tag_struct[0].rstrip(b'\0').decode()
-
+        # tagNames has multliple of same name add (n)
+        if tag_struct[1] !=-1:
+            tagName=f'{tagName}({tag_struct[1]})'
+      
         keys = ('idx', 'type', 'value')
         tag = {k: v for k, v in zip(keys, tag_struct[1:])}
 
