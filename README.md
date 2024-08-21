@@ -61,7 +61,8 @@ Config1 = Set_Channel_Info(1,
 
 1. Summary Intensity plus FLIM image. *Figure1*
 2. optional *clean_imsave*, saves a clean, FLIM and Intensity TIF file for each channel.
-3. optional *Save_data_files*, saves a csv data of intensity and Tavg lifetimes.
+3. optional *Save_tiff_stack*, saves a tiffstack: 2D image stack, slices are the timebin, used for [FLUTE phasor post analysis](https://github.com/LaboratoryOpticsBiosciences/FLUTE).
+4. optional *Save_data_files*, saves a csv data of intensity and Tavg lifetimes.
 
 
 
