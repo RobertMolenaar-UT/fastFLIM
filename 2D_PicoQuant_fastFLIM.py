@@ -521,7 +521,7 @@ for path in path_select:
         plt.show()
 
     if Save_tiff_stack:
-        for i, c in enumerate(ch_list):
+        for i, chan in enumerate(ch_list):
             #save each channel as a tiffstack     
             save_as_tif(flim_data_stack[:,:,i,:].transpose(2,0,1),f'{d_name}{f_name}__{chan.ChannelName}.tif')
 
