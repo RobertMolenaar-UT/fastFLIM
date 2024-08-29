@@ -72,7 +72,7 @@ scalebar_ticks      = 5         #number of ticks in the cmap
 
 #Saving optons
 clean_imsave        =True       #save tif files, intensity and cmap
-Save_tiff_stack     =False      # save image tiff stack, for phasor post analysis, x,y,time slices per bin.
+Save_tiff_LTstack     =False      # save image tiff stack, for phasor post analysis, x,y,time slices per bin.
 Save_data_files     =True       #Write CSV data files with intensity of all channels 8.dat
 fig_dpi             =200        #output figure resolution 100→300
 
@@ -221,7 +221,7 @@ def print_header_info():
     print(f"\n-File comment--------------\n{ptu_file.head['File_Comment']}")    
     print('----------------------------\n')
 
-if Save_tiff_stack:
+if Save_tiff_LTstack:
     from PIL import Image
     def save_as_tif(framelist, name):
             imlist = [Image.fromarray(fr) for fr in framelist]
@@ -515,16 +515,19 @@ for path in path_select:
         plt.savefig(f'{d_name}{f_name}__FLIM_overlap_{chan.ChannelName}.png',dpi=fig_dpi)
         
         if clean_imsave:
-            imageio.imwrite(f'{d_name_tif}FLIM_combi_im_{f_name}_{chan.ChannelName}.tif', (255*FFcmap).astype(np.uint8))
+            d_name_tif=f"{d_name}tiff images\\"
+            os.makedirs(d_name_tif,exist_ok=True)  
+            mageio.imwrite(f'{d_name_tif}FLIM_combi_im_{f_name}_{chan.ChannelName}.tif', (255*FFcmap).astype(np.uint8))
             imageio.imwrite(f'{d_name_tif}INT_combi_im_{f_name}_{chan.ChannelName}.tif', FFI.astype(np.uint16))
             
         plt.show()
 
-    if Save_tiff_stack:
+    if Save_tiff_LTstack:
+        d_name_tifstack=f"{d_name}LT_tiff_stack\\"
+        os.makedirs(d_name_tifstack,exist_ok=True)
         for i, chan in enumerate(ch_list):
             #save each channel as a tiffstack     
-            save_as_tif(flim_data_stack[:,:,i,:].transpose(2,0,1),f'{d_name}{f_name}__{chan.ChannelName}.tif')
-
+            save_as_tif(flim_data_stack[:,:,i,:].transpose(2,0,1),f'{d_name_tifstack}{f_name}__{chan.ChannelName}.tif')
 
 #%%
 
