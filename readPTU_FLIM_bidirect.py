@@ -343,7 +343,7 @@ class PTUreader():
         tagValue  = tag['value']
         return tagName, tagValue, offset, tagStringR
     
-  def _ptu_read_head(self, ptu_data_string):
+    def _ptu_read_head(self, ptu_data_string):
         offset         = 16
         FileTagEnd     = 'Header_End' 
 
