@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-#Copyright Robert Molenaar 240731
+#Copyright Robert Molenaar 2401128
 
-#Update FLIM reader, to accept a specific tac range. (min TAC output is set to 0ns).
-#Accept bidirectional scanning, added PIE support and binning.
 
 #### Experimental INFO ####
 
@@ -24,23 +22,21 @@ class Set_Channel_Info:
         self.FFint          = 0                       # 2D result, flaot64 FastrFlim intensity (FFint) image for this channel 
         
         
-
         
 """##################  START of user input ###########"""
 
-
-
+#set here your channel information 
 Config1 = Set_Channel_Info(1,
-                           'Ch1 name'   ,
-                           Brighter=1.2      ,
-                           PIE_TimeGate=1  ,
-                           ch_irf=2.55)
+                           'Ch1 name'   ,           #name/dye channel 1
+                           Brighter=1.2      ,      #Make FLIM image a fraction brighter for beter visibility
+                           PIE_TimeGate=1  ,        #excitation (PIE) time-gate, Timing is automatically calculated
+                           ch_irf=1.86)             #Instrument Response Function: offset, Measure the direct reflection of a coverslip/mirror
 
 Config2 = Set_Channel_Info(2,
                            'Ch2 name'      ,
                            Brighter=1.2      ,
                            PIE_TimeGate=2  ,
-                           ch_irf=2.25)
+                           ch_irf=1.85)
 
 Config3 = Set_Channel_Info(3,
                            'Ch3 name',
@@ -54,33 +50,38 @@ Config4 = Set_Channel_Info(4,
                            ch_irf=2.55)
 
 #File picking    
-GUI_MultiPick=True    #Set TO Flase to proccess the full folder with the GUI
-Default_prompt=r'C:'
+GUI_MultiPick        =True     #Set to Flase to proccess the full folder with the GUI (default True)
+Default_prompt       =r'C:'    #Default folder to pick your files, advice use our .SPTW folder
 
+#Lifetime settings
+Tau_min              =  0       # ns. start Lifetime Cmap , bellow is clipped
+Tau_max              =  4       # ns. end   Lifetime Cmap ,  above is clipped
+TCSPC_PIE_Start_ns   =  0       # ns. Include TCSPC data in Fastflim from 
+TCSPC_PIE_End_ns     =  16      # ns. Include TCSPC data in Fastflim untill (FastFlim mesaured average arrival time, in FLIM counts are limited and in many cases late photons are noise, and bias Tavg longer, enhanchin color noise)
 
-Tau_min=0                       #start Lifetime Cmap from if set
-Tau_max=4                       #end Lifetime Cmap at, above is clipped
+#lateral image settings
+Channel_Binning      =  False   #Merge all channels into channel 1, multiple detectors combined to one (please match IRF onset in symphotine64 and use beamsplitters)
+Binning              =  1       #Pixel Binning 1,2,3 = 1x1, 2x2 , 3x3 etc before fastFLIM conversion
+bi_shift             =  0.0     #bi-derctional line pixel correction,  float anything between 0.0 -3.0
 
-shorter_End_PIE_ns   =  0       #cut a piece from the initial x ns 
-shorter_Front_PIE_ns =  0       #cut a piece from the start TAC ns to surpess noise
-channel_binning      = False    #Merges all channels into channel 1, multiple detectors combined to one (please match IRF onset in symphotine64)
-binning              =  1       #Pixel binning 1,2,3 = 1x1, 2x2 , 3x3 etc before fastFLIM conversion
-bi_shift             = -1       #bidirectional scanning mode, line mismatch correction
+#figure plot options
+scalebar             =  True    #insert a scalebar in FLIM image instead of axis
+tav_cbar_ticks       =  7       #number of ticks in the lifetime cmap
 
-scalebar            =True       #insert a scalebar in FLIM image instead of axis
-scalebar_ticks      = 5         #number of ticks in the cmap
+overlap_FLIMchannels =  False    #in multchannels FLIM image can be ovelapped 
+overlap_projection   = 'maximum' #or 'sum'
 
 #Saving optons
-clean_imsave        =True       #save tif files, intensity and cmap
-Save_tiff_LTstack     =False      # save image tiff stack, for phasor post analysis, x,y,time slices per bin.
-Save_data_files     =True       #Write CSV data files with intensity of all channels 8.dat
-fig_dpi             =200        #output figure resolution 100→300
+Clean_Imsave         = True       #save tif files, intensity and cmap
+Save_tiff_LTstack    = False      #save image tiff stack, for phasor post analysis, x,y,time slices per bin.
+Save_data_files      = True       #Write CSV data files with intensity of all channels 8.dat
+Fig_dpi              =  200       #output figure resolution 100→300
+FLIM_Database_NPZ    = True       #Save FLIM_data_stack to npz file, speed increase since it skips photon conversion for large files.
+FLIM_Sync_Rate_Fraction = 0.2     #Pixels counts can not be to high: FLIM countrate should not be beyond 10-[20]pct
 
-folder_com_pre      =''          #optinal prefic for a saving folder
-folder_com          =f'{folder_com_pre}TAC_{Tau_min:.2f}-{Tau_max:.2f}'
+folder_com_pre       =''          #optinal prefic for a saving folder
+folder_com           =f'{folder_com_pre}TAC_{Tau_min:.2f}-{Tau_max:.2f}'
 
-overlap_FLIMchannels=False      #in multchannels image cab be ovelapped 
-projection          ='maximum'   #or 'sum'
 
 
 """################## END of user input ###########"""
@@ -144,9 +145,9 @@ def winsort(data):
 
 def Read_objective():
     """ Extracts the objective setting in symphotime.
-    Here you can add the full `name of the lens set in the microscop
+    Here you can add the full `name of the lens set in the microscope
     Set your objectives
-    If objectives have been defined in Symphotime64 configuration these specific names is passed
+    If objectives have been defined in Symphotime64 configuration these specific names are passed
     """
     lens=ptu_file.head['ImgHdr_ObjectiveName']    
     if lens =='20x':
@@ -173,8 +174,6 @@ def Channels_list(data_stack):
           out=np.append(out,CLSch[i])
           info=info+'Ch'+str(i+1)+' '
           out2=np.append(out2,'Ch'+str(i+1))
-    #print(info+'detected in file: '+f_name)
-    #print('Image size: '+str(ptu_file.head['ImgHdr_PixX'])+'p x '+str(ptu_file.head['ImgHdr_PixY'])+'p  Objective: '+Read_objective())
     return out, out2
 
 
@@ -193,7 +192,7 @@ def Read_SEPIA_used_laser_lines():
     
     for i, a in enumerate([200,300,400,500,600]):
         try:
-            #exception when a PDL 828module is not installed or removed.
+            #more robust exception when a PDL 828module is not installed or removed.
             if ptu_file.head[f"Sep2_SLM_{a}_FineIntensity"] !=0:
                 line=np.append(line, int(ptu_file.head[f'UsrHeadName({i})'][:3]))
                 Colour_out=np.append(Colour_out,recommend_colour[i])
@@ -216,8 +215,8 @@ def print_header_info():
         print(f"Scanning:   bi-directional   offset {ptu_file.head['ImgHdr_BiDirectOffset']}")
     else:
         print('Scanning:   mono-directional')
-    print(f"PTU File:   {ptu_file.head['ImgHdr_MaxFrames']} frames")
-    print(f"SYNC-rate:  {ptu_file.head['TTResult_SyncRate']/1E6} Mhz")
+    print(f"PTU File:   {ptu_file.head['ImgHdr_MaxFrames']} frame(s)")
+    print(f"SYNC-rate:  {ptu_file.head['TTResult_SyncRate']/1E6:.1f} Mhz")
     print(f"\n-File comment--------------\n{ptu_file.head['File_Comment']}")    
     print('----------------------------\n')
 
@@ -228,7 +227,7 @@ if Save_tiff_LTstack:
             imlist[0].save(name, compression="tiff_deflate", save_all=True, append_images=imlist[1:])
 
 Errors=['']
-#Z_Slice=0
+
 #%% 
 
 #Read PTU files SinglePick selects a single file
@@ -264,45 +263,81 @@ for path in path_select:
     #Main loop that procceses all *.PTU files (path_select) from Multiple file pick or folder
     
     #read ptu file
-    print(f'\nConverting TCSPC-data from | {os.path.split(path)[1]} | to a fastFLIM image.')    
-    ptu_file  = PTUreader((path), print_header_data = False, bi_shift=bi_shift)
+    print(f'FLIM_Database_NPZ = True\nConverting TCSPC-data from | {os.path.split(path)[1]} | to a fastFLIM image.\n')    
+    ptu_file  = PTUreader((path), print_header_data = False)
     
     #File checking if its 1D or 2d: skip to next file if 1D
     if ptu_file.head["Measurement_SubMode"] !=  3:
         Errors=np.append(Errors,path)
         print('NOTE: File is a Point-measurement: skip to next *.PTU file')
         continue
-        
+    
     #make saveing file and directory names
     os.path.dirname(path)
     d_name, f_name=os.path.split(path)
     f_name, ex=os.path.splitext(f_name)
-    d_name=f"{d_name}\Python_Converted_{folder_com}_{getpass.getuser()}\\"
-    os.makedirs(d_name,exist_ok=True)
-
+    
+    if FLIM_Database_NPZ:
+        db_name=f'{d_name}\\DataStack_DB'
+        os.makedirs(db_name,exist_ok=True)
+        db_name=f'{db_name}\\{f_name}.npz'
+ 
     print_header_info()
     #convert FIFO data into a histogram 4D x,y,channel, hsitodata, returns 4d datastack and intnsity image
     
-    try:
-        # READ PTU data into FLIM data stack
-        flim_data_stack, intensity_image = ptu_file.get_flim_data_stack()
-    except:
-        Errors=np.append(Errors,path)
-        print(f'WARNING: File-ERROR: in {f_name} to read Datastack ')
-        continue
+    DataBase_present=False
+    if FLIM_Database_NPZ and os.path.exists(db_name):
+        print(f'NOTE: file already converted & loading flim_data_stack ..\DataStack_DB\{f_name}.npz')
+        DataBase_present=True
+        database=np.load(db_name) 
+        flim_data_stack=database['flim_data_stack']
+        intensity_image=database['intensity_image']
+        #check if file is bi-direct and bi-shift is identical
+        if ptu_file.head['ImgHdr_BiDirect'] and (np.abs(bi_shift - database['bi_shift'])) >= 0.001: # floatcomparisson thing
+            print(f'NOTE: bi-shift {bi_shift:.1f}p is different from DataBase {database["bi_shift"]:.1f}p ! Photonconversion again and updating Database.')
+            DataBase_present=False            
+        
+        print('')
+        del database
+        
+   
+    if DataBase_present==False:
+        try:
+            # READ PTU data into FLIM data stack
+            print('Waiting: Photoconverting PTU to FLIM DataStack')
+            flim_data_stack, intensity_image = ptu_file.get_flim_data_stack(bi_shift)
+        except:
+            Errors=np.append(Errors,path)
+            print(f'WARNING: File-ERROR: in {f_name} in read PTU_reader get_Flim_data_stack ')
+            continue
+        
+        #reduce data type(dont expect pixel tac values to go higer than 8or16bit)
+        if np.max(flim_data_stack)<=255:
+            flim_data_stack=flim_data_stack.astype(np.uint8)
+            intensity_image=intensity_image.astype(np.uint16)
+            bitdepth='as 8bit'
+        else:
+            flim_data_stack=flim_data_stack.astype(np.uint16)
+            intensity_image=intensity_image.astype(np.uint16)
+            bitdepth='as 16bit'
     
+        if FLIM_Database_NPZ:
+            print(f'NOTE: saving flim_data_stack ..\DataStack_DB\{f_name}.npz {bitdepth}')
+            np.savez(db_name,flim_data_stack=flim_data_stack,intensity_image=intensity_image,bi_shift=np.array(bi_shift, dtype=np.float16))
+  
+
     try:
-        # search flim_data_stack for use dchannels
+        # search flim_data_stack for avaialble channels
         ch_list, _=Channels_list(flim_data_stack)
     except:
         Errors=np.append(Errors,path)
         print(f'WARNING: File-ERROR: in {f_name} channels auto detection')
         continue
-    
+        
    
-    if binning>=2:
-        #Reshape the FLIM datastack for binning
-        print(f'NOTE: Binning mode is enabled by setting binning to {binning}!\n')
+    if Binning>=2:
+        #Reshape the FLIM datastack for Binning
+        print(f'NOTE: Binning mode is enabled by setting Binning to {Binning}!')
         #reshape by grouping adjecent pixels 2x2
         reshaped_flim_data_stack = flim_data_stack.reshape(int(np.shape(flim_data_stack)[0]/2), 2, int(np.shape(flim_data_stack)[1]/2), 2, np.shape(flim_data_stack)[2], np.shape(flim_data_stack)[3])
         flim_data_stack = reshaped_flim_data_stack.sum(axis=(1, 3))
@@ -312,51 +347,59 @@ for path in path_select:
         intensity_image = reshaped_intensity_image.sum(axis=(1, 3))
         del reshaped_intensity_image
             
-        ptu_file.head["ImgHdr_PixX"]=int(ptu_file.head["ImgHdr_PixX"]/binning)
-        ptu_file.head["ImgHdr_PixY"]=int(ptu_file.head["ImgHdr_PixY"]/binning)
-        ptu_file.head["ImgHdr_PixResol"] = ptu_file.head["ImgHdr_PixResol"]*binning
+        ptu_file.head["ImgHdr_PixX"]=int(ptu_file.head["ImgHdr_PixX"]/Binning)
+        ptu_file.head["ImgHdr_PixY"]=int(ptu_file.head["ImgHdr_PixY"]/Binning)
+        ptu_file.head["ImgHdr_PixResol"] = ptu_file.head["ImgHdr_PixResol"]*Binning
 
-    if channel_binning:
-        # channel binning
+    if Channel_Binning:
+        # channel Binning
+        initial_channels=len(ch_list)
+        
         if 'Combined SPADs' not in ch_list[0].Name:
             ch_list[0].Name = f'{ch_list[0].Name} Combined SPADs'  
             ch_list[0].ChannelName = f'{ch_list[0].ChannelName}→{ch_list[len(ch_list)-1].Channel+1}'  
             folder_com=f'ChBin_{folder_com}'
         
-        flim_data_stack=np.expand_dims(np.sum(flim_data_stack, axis=2), axis=2)
+        flim_data_stack=np.expand_dims(np.sum(flim_data_stack, axis=2), axis=2).astype(np.uint16)
         #Since channels are gone, configuration are copied from the first channel in the list
         ch_list=ch_list[:1]
-        print("NOTE: channel_binning on 'ON' all channels are merged.")
+        print("NOTE: Channel_Binning is enabled all channels are merged.")
         
-        
-    #extra info
     
+    #Create supporting info
     LaserLines, LaserInfo, _ =Read_SEPIA_used_laser_lines()    
     Objective=Read_objective()
+    d_name=f"{d_name}\Python_Converted_{folder_com}_{getpass.getuser()}\\"
+    os.makedirs(d_name,exist_ok=True)
     
     #Making timegate boundaries and put these into each channel config files
     #convert optial TAC limit from ns to TAC timebins
 
     PieBaseLen=int(np.trunc(len(flim_data_stack[0,0,0])/len(LaserLines)))
         
+    FLIM_sync_limit=ptu_file.head['ImgHdr_TimePerPixel']*Binning**2/(ptu_file.head['MeasDesc_GlobalResolution']*1000)*FLIM_Sync_Rate_Fraction    
+    if Channel_Binning:
+        FLIM_sync_limit=initial_channels*FLIM_sync_limit
+    
+    print(f'FLIM datastack ready - creating FLIM image  20% Sync limit = {FLIM_sync_limit:.0f}cnts')
+    
     if ptu_file.head['UsrPulseCfg'] == 'PIE':
         print(f'PIE Excitation: {LaserInfo}')
         Excitation=f'PIE {LaserInfo}'
         for chan in ch_list:
-            chan.TAC_start=  (chan.TimeGate*PieBaseLen)+round(shorter_Front_PIE_ns/(ptu_file.head['MeasDesc_Resolution']*1E9))
-            chan.TAC_stop =  ((chan.TimeGate+1)*PieBaseLen)-round(shorter_End_PIE_ns/(ptu_file.head['MeasDesc_Resolution']*1E9))
+            chan.TAC_start=  (chan.TimeGate*PieBaseLen)+round(TCSPC_PIE_Start_ns/(ptu_file.head['MeasDesc_Resolution']*1E9))
+            chan.TAC_stop =  (chan.TimeGate*PieBaseLen)+round(TCSPC_PIE_End_ns/(ptu_file.head['MeasDesc_Resolution']*1E9))
             print(f'TimeGate {chan.ChannelName} {chan.TAC_start*ptu_file.head["MeasDesc_Resolution"]*1E9:.1f}-{chan.TAC_stop*ptu_file.head["MeasDesc_Resolution"]*1E9:.1f}ns')
     else:
         print(f'Normal Excitation: {LaserInfo}')
         Excitation=f'Normal {LaserInfo}'
         for chan in ch_list:
-            chan.TAC_start=  0+round(shorter_Front_PIE_ns/(ptu_file.head['MeasDesc_Resolution']*1E9))
-            chan.TAC_stop =  PieBaseLen-round(shorter_End_PIE_ns/(ptu_file.head['MeasDesc_Resolution']*1E9))
+            chan.TAC_start=  0+round(TCSPC_PIE_Start_ns/(ptu_file.head['MeasDesc_Resolution']*1E9))
+            chan.TAC_stop =  round(TCSPC_PIE_End_ns/(ptu_file.head['MeasDesc_Resolution']*1E9))
    
         #Loop over channel configurations and fill the color the FLIM colourscale
 
-    FLIM_sync_limit=ptu_file.head['ImgHdr_TimePerPixel']*binning**2/(ptu_file.head['MeasDesc_GlobalResolution']*1000)*.2    
-    print(f'FLIM conversion  20pct Photon rate = {FLIM_sync_limit:.0f}cnts')
+   
 #%% Data FLIM converation and Colourmap generation
 
     for chan in ch_list:
@@ -405,23 +448,37 @@ for path in path_select:
     date=ptu_file.head["File_CreatingTime"].split(sep=' ')
     DwellTime=f'Pixel dwell-time: {ptu_file.head["ImgHdr_TimePerPixel"]*1000:.1f}$\mu$s'
     extent=[0, ptu_file.head["ImgHdr_PixX"]*ptu_file.head["ImgHdr_PixResol"],ptu_file.head["ImgHdr_PixY"]*ptu_file.head["ImgHdr_PixResol"],0]
-    image_pixels=f' | size {ptu_file.head["ImgHdr_PixX"]}x{ptu_file.head["ImgHdr_PixY"]} {ptu_file.head["ImgHdr_PixResol"]:.3f}µm/p | 20% sync lim {FLIM_sync_limit:.0f}cnt | Rate {ptu_file.head["TTResult_SyncRate"]/1E6:.1f}MHz '
+    image_pixels=f' | size {ptu_file.head["ImgHdr_PixX"]}x{ptu_file.head["ImgHdr_PixY"]} {ptu_file.head["ImgHdr_PixResol"]:.2f}µm/p  |  sync {ptu_file.head["TTResult_SyncRate"]/1E6:.1f}MHz  |  LIM {FLIM_sync_limit:.0f}cnt.'
+    if ptu_file.head['ImgHdr_BiDirect']:
+        scan_mode=f'|  ↔ {bi_shift:.1f}p'
+    else:
+        scan_mode= '|  →'
+    
  
-        
+    
     for  chan in ch_list:
         
          fig2, axs = plt.subplots(1, 2, figsize=(15.9, 7.5))
          rect = fig2.patch  #modify background color
          rect.set_facecolor('white')
-         #fig2.suptitle(' Nanobiophysics - PicoQuant MT200', fontsize=14, weight='bold')
+         
+         #The sync limit will be show in the int bar, so it needs to be manualy defined here
+         int_steps= np.round(np.max(chan.FFint)/7, decimals=-2)
+         int_ticks=np.arange(int_steps, np.max(chan.FFint)+int_steps, int_steps)
+         
          plt.figtext(0.127,0.925,  f'PTU file: {f_name}', fontsize=14, weight='medium')
-         plt.figtext(0.127,0.895  ,f'Time: {date[1]}  {date[0]}  |  {Excitation}  |  {Objective}')
+         plt.figtext(0.127,0.895  ,f'Time: {date[1]}  {date[0]}  |  {Excitation}  |  {Objective}  {scan_mode}')
          plt.figtext(0.127,0.875  ,f'{DwellTime} {image_pixels}')
          im1 = axs[0].imshow( chan.FFint, cmap='gray', extent=extent)         
-         
-         cbar=fig2.colorbar(im1, ax=axs[0], fraction=0.047, pad=0.02, shrink=0.8)
+                 
+         #modification in the intensity cale the sync limit value is replaced with the clossest tick.
+                  
+         int_ticks[np.abs(int_ticks-FLIM_sync_limit).argmin()]=FLIM_sync_limit
+         cbar=fig2.colorbar(im1, ax=axs[0], fraction=0.047, pad=0.02, shrink=0.8, ticks= int_ticks)
+         cbar.ax.axhline(FLIM_sync_limit, c='r')
          cbar.ax.tick_params(labelsize=12)
          cbar.set_label('Intensity [counts]', labelpad=8, rotation=90, size=13)
+        
          axs[0].set_xlabel('X $\mu$m')
          axs[0].set_ylabel('Y $\mu$m')
          axs[0].grid(False)
@@ -429,10 +486,10 @@ for path in path_select:
          im2 = axs[1].imshow(chan.FFcmap, extent=extent)
          im2.set_cmap(cm.jet) #manual set of colorbar cmap 
          im2.set_clim([chan.Tau_min,chan.Tau_max]) #manaual set range of the colorbar cm
-         cbar=fig2.colorbar(im2, ax=axs[1], fraction=0.047, pad=0.02, shrink=0.8, ticks=np.linspace(chan.Tau_min,chan.Tau_max,scalebar_ticks))
+         cbar=fig2.colorbar(im2, ax=axs[1], fraction=0.047, pad=0.02, shrink=0.8, ticks=np.linspace(chan.Tau_min,chan.Tau_max,tav_cbar_ticks))
          cbar.ax.tick_params(labelsize=12)
          cbar.set_label('Average lifetime [ns]', labelpad=8, rotation=90, size=13)
-         
+
          #ptu_file.head["ImgHdr_PixResol"]
          axs[1].set_title(f'fastFLIM | {chan.ChannelName}: {chan.Name}', size=13)
          if scalebar:
@@ -444,11 +501,11 @@ for path in path_select:
              axs[1].set_ylabel('Y $\mu$m')
              axs[1].grid(False)
             
-         plt.savefig(f'{d_name}{f_name}__FLIM_{chan.ChannelName}.png',dpi=fig_dpi)
+         plt.savefig(f'{d_name}{f_name}__FLIM_{chan.ChannelName}.png',dpi=Fig_dpi)
          
          plt.show()
          
-         if clean_imsave:
+         if Clean_Imsave:
              d_name_tif=f"{d_name}tif files\\"
              os.makedirs(d_name_tif,exist_ok=True)             
              imageio.imwrite(f'{d_name_tif}FLIM_im_{f_name}_{chan.ChannelName}.tif', (255*chan.FFcmap).astype(np.uint8))
@@ -458,14 +515,14 @@ for path in path_select:
                  
     if len(ch_list)>1 and overlap_FLIMchannels:
         
-        if projection=='sum':
+        if overlap_projection=='sum':
             FFI=0
             FFcmap=0    
             for chan in ch_list:
                 FFI=FFI+chan.FFint
                 FFcmap=FFcmap+chan.FFcmap
             
-        if projection== 'maximum':
+        if overlap_projection== 'maximum':
             if len(ch_list)==2:
                 FFcmap=np.max(np.stack((ch_list[0].FFcmap, ch_list[1].FFcmap), axis = -1), axis=3)
                 FFI   =np.maximum(ch_list[0].FFint, ch_list[1].FFint)
@@ -483,11 +540,15 @@ for path in path_select:
         rect.set_facecolor('white')
         #fig2.suptitle(' Nanobiophysics - PicoQuant MT200', fontsize=14, weight='bold')
         plt.figtext(0.127,0.925,  f'PTU file: {f_name}', fontsize=14, weight='medium')
-        plt.figtext(0.127,0.895  ,f'Time: {date[1]}  {date[0]}  |  {Excitation}  |  {Objective}')
+        plt.figtext(0.127,0.895  ,f'Time: {date[1]}  {date[0]}  |  {Excitation}  |  {Objective}  {scan_mode}')
         plt.figtext(0.127,0.875  ,f'{DwellTime} {image_pixels}')
-        im1 = axs[0].imshow( FFI, cmap='gray', extent=extent)         
         
-        cbar=fig3.colorbar(im1, ax=axs[0], fraction=0.047, pad=0.02, shrink=0.8)
+        int_steps= np.round(np.max(chan.FFint)/7, decimals=-2)
+        int_ticks=np.arange(int_steps, np.max(chan.FFint)+int_steps, int_steps)
+                
+        im1 = axs[0].imshow( FFI, cmap='gray', extent=extent)         
+
+        cbar=fig3.colorbar(im1, ax=axs[0], fraction=0.047, pad=0.02, shrink=0.8, ticks= int_ticks)
         cbar.ax.tick_params(labelsize=12)
         cbar.set_label('Intensity [counts]', labelpad=8, rotation=90, size=13)
         axs[0].set_xlabel('X $\mu$m')
@@ -497,12 +558,13 @@ for path in path_select:
         im2 = axs[1].imshow(FFcmap, extent=extent)
         im2.set_cmap(cm.jet) #manual set of colorbar cmap 
         im2.set_clim([chan.Tau_min,chan.Tau_max]) #manaual set range of the colorbar cm
-        cbar=fig3.colorbar(im2, ax=axs[1], fraction=0.047, pad=0.02, shrink=0.8, ticks=np.linspace(chan.Tau_min,chan.Tau_max,scalebar_ticks))
+        cbar=fig3.colorbar(im2, ax=axs[1], fraction=0.047, pad=0.02, shrink=0.8, ticks=np.linspace(chan.Tau_min,chan.Tau_max,tav_cbar_ticks))
         cbar.ax.tick_params(labelsize=12)
         cbar.set_label('Average lifetime [ns]', labelpad=8, rotation=90, size=13)
+        cbar.ax.axhline(FLIM_sync_limit, c='r')
         
         #ptu_file.head["ImgHdr_PixResol"]
-        axs[1].set_title(f'{projection} projection | fastFLIM | all channels ', size=13)
+        axs[1].set_title(f'{overlap_projection} projection | fastFLIM | all channels ', size=13)
         if scalebar:
             scalebar_s = ScaleBar(1E-6, location="lower right",  height_fraction=0.015, box_color="black", color="white", pad=1, sep=2, box_alpha=0.25, frameon=True, font_properties={'size':16} ) # 1 pixel = 0.2 meter
             plt.gca().add_artist(scalebar_s)
@@ -512,12 +574,12 @@ for path in path_select:
             axs[1].set_ylabel('Y $\mu$m')
             axs[1].grid(False)
            
-        plt.savefig(f'{d_name}{f_name}__FLIM_overlap_{chan.ChannelName}.png',dpi=fig_dpi)
+        plt.savefig(f'{d_name}{f_name}__FLIM_overlap_{chan.ChannelName}.png',dpi=Fig_dpi)
         
-        if clean_imsave:
+        if Clean_Imsave:
             d_name_tif=f"{d_name}tiff images\\"
             os.makedirs(d_name_tif,exist_ok=True)  
-            mageio.imwrite(f'{d_name_tif}FLIM_combi_im_{f_name}_{chan.ChannelName}.tif', (255*FFcmap).astype(np.uint8))
+            imageio.imwrite(f'{d_name_tif}FLIM_combi_im_{f_name}_{chan.ChannelName}.tif', (255*FFcmap).astype(np.uint8))
             imageio.imwrite(f'{d_name_tif}INT_combi_im_{f_name}_{chan.ChannelName}.tif', FFI.astype(np.uint16))
             
         plt.show()
