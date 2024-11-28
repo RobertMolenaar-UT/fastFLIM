@@ -3,7 +3,7 @@ Create fastFLIM images from PicoQuant PTU files.
 
 ![A2_Shep2_20__FLIM_Ch1→2_cr](https://github.com/user-attachments/assets/5f02dfff-c8ec-4779-b356-24f447a1fb1a)
 
-*Figure 1, Example of a 1 channel fastFLIM converted image, of cells labelled with FluoVolt dye, that shows change in lifetime* Shep2 cell made my E. de Jong . 
+*Figure 1, Example of a 1 channel fastFLIM converted image, of cells labelled with FluoVolt dye, that shows change in lifetime, Shep2 cell made my E. de Jong.*
 
 ## Discription
 The main purpose of the fastFLIM script is one can convert by batch multiple PTU files, or a folder with PTU files, and get a series Fluorescent fastFLIM images with minimal user input. This is usefull for screening results during imaging and to be used in presentations. FastFLIM calculates the average arrival time, which is a fast method to get a fluorescent lifetime information for image with low photon counts per pixel, which is typical for TCSPC methods. 
