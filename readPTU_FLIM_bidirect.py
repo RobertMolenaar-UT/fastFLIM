@@ -29,6 +29,8 @@ Aim : Open and convert Picoquant .ptu image files for FLIM analysis
  *  2) Intensity is just acquisition flim_data_stack(in photons) is accessed by binning across axis  = numTCSPCbins and numDetectors
  *  3) get_flim_data_stack class method is numba accelarated (using @jit decorator) to gain speed in building flim_data_stack from raw_tttr_data 
  
+
+241126 Robert Molenaar Added subpixel bi-bidirectional shift correction to get_flim_data_stack()   default 0.0  practival values betyween 0.0 4.0
 """
 
 
@@ -93,6 +95,7 @@ def get_flim_data_stack_static(sync, tcspc, channel, special, header_variables, 
         L2  = sync[np.where(special == LineStopMarker)]  # Get Line start marker sync values
 
         syncPulsesPerLine = np.floor(np.mean(L2[10:] - L1[10:])) 
+        syncPulses_bi_shift = np.floor((syncPulsesPerLine/num_pixel_X)*bi_shift)
 
 #             Get pixel dwell time values from header for PicoQuant_FLIMBee or Zeiss_LSM scanner
 
@@ -159,7 +162,8 @@ def get_flim_data_stack_static(sync, tcspc, channel, special, header_variables, 
 
                 if (currentLine % 2) == 1 and ImgHdr_bidirect == 1:
                     #odd lines
-                    currentPixel = num_pixel_X-int(np.floor((((currentSync-1 - syncStart)/syncPulsesPerLine)*num_pixel_X)))+bi_shift
+                    #currentPixel = num_pixel_X-int(np.floor((((currentSync-1 - syncStart)/syncPulsesPerLine)*num_pixel_X)))+bi_shift
+                    currentPixel = num_pixel_X-int(np.floor((((currentSync + syncPulses_bi_shift - syncStart)/syncPulsesPerLine)*num_pixel_X)))
                     tmpchan   = channel[event]
                     tmptcspc  = tcspc[event]
 
@@ -240,7 +244,7 @@ class PTUreader():
         rtMultiHarpNT2   = 0x00010207,  # (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $07 (MultiHarp150N)
     )
 
-    def __init__(self, filename, print_header_data = False, bi_shift=0):
+    def __init__(self, filename, print_header_data = False):
         
         # raw_tttr_data = False, get_image_data = True
         # if get_image_data = True then get_raw_data = False
@@ -253,7 +257,7 @@ class PTUreader():
         
         self.ptu_name        = filename
         self.print_header    = print_header_data
-        self.bi_shift        = bi_shift
+        #self.bi_shift        = bi_shift
         
         f = open(self.ptu_name, 'rb')
         self.ptu_data_string = f.read() # ptu_data_string is a string of bytes and reads all file in memory
@@ -549,9 +553,9 @@ class PTUreader():
 
         return None
     
-    def get_flim_data_stack(self): 
+    def get_flim_data_stack(self, bi_shift = 0): 
         
-        # Check if it's FLIM image
+        # Check if it's FLIM image, in mono-directional mode bi-shift value is ignored
         if self.head["Measurement_SubMode"] == 0:
             raise IOError("This is not a FLIM PTU file.!!! \n")
             sys.exit()
@@ -569,7 +573,7 @@ class PTUreader():
         tcspc       = self.tcspc
         channel     = self.channel 
         special     = self.special 
-        shift        =self.bi_shift
+        shift       = bi_shift
         
         del self.sync, self.tcspc, self.channel , self.special
         
