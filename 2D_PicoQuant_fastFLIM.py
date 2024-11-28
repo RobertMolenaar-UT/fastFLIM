@@ -50,13 +50,13 @@ Config4 = Set_Channel_Info(4,
                            ch_irf=2.55)
 
 #File picking    
-GUI_MultiPick        =True     #Set to Flase to proccess the full folder with the GUI (default True)
-Default_prompt       =r'C:'    #Default folder to pick your files, advice use our .SPTW folder
+GUI_MultiPick        =True     #Set to Flase to proccess the full folder with the GUI (default True).
+Default_prompt       =r'C:'    #Default folder to pick your files, advice use our .SPTW folder.
 
 #Lifetime settings
-Tau_min              =  0       # ns. start Lifetime Cmap , bellow is clipped
-Tau_max              =  4       # ns. end   Lifetime Cmap ,  above is clipped
-TCSPC_PIE_Start_ns   =  0       # ns. Include TCSPC data in Fastflim from 
+Tau_min              =  0       # ns. start Lifetime Cmap , below is clipped.
+Tau_max              =  4       # ns. end   Lifetime Cmap , above is clipped.
+TCSPC_PIE_Start_ns   =  0       # ns. Include TCSPC data in Fastflim from. 
 TCSPC_PIE_End_ns     =  16      # ns. Include TCSPC data in Fastflim untill (FastFlim mesaured average arrival time, in FLIM counts are limited and in many cases late photons are noise, and bias Tavg longer, enhanchin color noise)
 
 #lateral image settings
