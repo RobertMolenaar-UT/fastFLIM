@@ -72,7 +72,7 @@ Config1 = Set_Channel_Info(1,
 
 ### Known limitations: 
 
-1. Files sizes > 1GB use a lot of Memory. 32GB or higher is recommended for 1GB PTU files. 
+1. File sizes > 1GB use a lot of Memory. 32GB or higher is recommended for 1GB PTU files. 
 2. Multiframe PTU conversion appears to skip a Frame, modification needed in the readPTU_FLIM code. aug '24
 
 ### About
