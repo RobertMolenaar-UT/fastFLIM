@@ -27,24 +27,24 @@ class Set_Channel_Info:
 
 #set here your channel information 
 Config1 = Set_Channel_Info(1,
-                           'Ch1 name'   ,           #name/dye channel 1
+                           'Ch1 Namelabel'   ,           #name/dye channel 1
                            Brighter=1.2      ,      #Make FLIM image a fraction brighter for beter visibility
                            PIE_TimeGate=1  ,        #excitation (PIE) time-gate, Timing is automatically calculated
                            ch_irf=1.86)             #Instrument Response Function: offset, Measure the direct reflection of a coverslip/mirror
 
 Config2 = Set_Channel_Info(2,
-                           'Ch2 name'      ,
+                           'Ch2 Namelabel'      ,
                            Brighter=1.2      ,
                            PIE_TimeGate=2  ,
                            ch_irf=1.85)
 
 Config3 = Set_Channel_Info(3,
-                           'Ch3 name',
+                           'Ch3 Namelabel',
                            Brighter=1.2          ,
                            PIE_TimeGate=2     , 
                            ch_irf=2.6)
 Config4 = Set_Channel_Info(4,  
-                           'Ch4 name'  ,
+                           'Ch4 Namelabel'  ,
                            Brighter=1.2    ,
                            PIE_TimeGate=3      , 
                            ch_irf=2.55)
